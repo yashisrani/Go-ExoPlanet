@@ -76,10 +76,11 @@ func ListExoPlanet(w http.ResponseWriter, r *http.Request)  {
 
 // get exoplante by id
 func GetExoPlanetByID(w http.ResponseWriter, r *http.Request)  {
-	// to validate id
+	// to get id using mux.vars
 	params:=mux.Vars(r)
 	id:=params["id"]
 
+	// to validate is id is present or not
 	exoplanet,ok:=store.ExoPlanets[id]
 	if !ok {
 		responsewitherror(w,http.StatusNotFound,models.ErrNotFound.Error())
@@ -87,3 +88,34 @@ func GetExoPlanetByID(w http.ResponseWriter, r *http.Request)  {
 	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(exoplanet)
 }
+
+// update exoplanet by id
+ func UpdateExoPlanet(w http.ResponseWriter, r *http.Request)  {
+	params:=mux.Vars(r)
+	id:=params["id"]
+
+	// to get requested planet id, which we want to change data 
+	var reqPlanet models.ExoPlanet
+
+	// to decode json request
+	if err:=json.NewDecoder(r.Body).Decode(&reqPlanet);err!=nil{
+		responsewitherror(w,http.StatusBadRequest, "Invalid request payload")
+	}
+
+	if err:= validationExoplanet(&reqPlanet);err!=nil {
+		responsewitherror(w,http.StatusBadRequest, "Invalid exoplanet data")
+	}
+
+	// to validate is id is present or not
+	_,ok:=store.ExoPlanets[id]
+	if !ok {
+		responsewitherror(w,http.StatusNotFound,models.ErrNotFound.Error())
+	}
+
+	reqPlanet.ID = id
+	store.ExoPlanets[id]=reqPlanet
+	w.Header().Set("content-type", "application/json")
+	json.NewEncoder(w).Encode(reqPlanet)
+
+	
+ }
