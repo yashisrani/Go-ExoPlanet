@@ -126,7 +126,7 @@ func DeleteExoPlanet(w http.ResponseWriter, r *http.Request) {
 	id := params["id"]
 
 	// to validate is id is present or not
-	_, ok := store.ExoPlanets[id]
+	p, ok := store.ExoPlanets[id]
 	if !ok {
 		responsewitherror(w, http.StatusNotFound, models.ErrNotFound.Error())
 		return
@@ -135,5 +135,8 @@ func DeleteExoPlanet(w http.ResponseWriter, r *http.Request) {
 	// to delete
 	delete(store.ExoPlanets, id)
 	w.WriteHeader(http.StatusNoContent)
+
+	// adding , which planet is removed
+	json.NewEncoder(w).Encode(p)
 
 }
