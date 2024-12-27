@@ -134,9 +134,9 @@ func DeleteExoPlanet(w http.ResponseWriter, r *http.Request) {
 
 	// to delete
 	delete(store.ExoPlanets, id)
-	w.WriteHeader(http.StatusNoContent)
-
+	w.Header().Set("content-type", "application/json")
 	// adding , which planet is removed
 	json.NewEncoder(w).Encode(p)
+	w.WriteHeader(http.StatusNoContent)
 
 }
