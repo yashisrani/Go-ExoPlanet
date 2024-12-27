@@ -18,6 +18,7 @@ func main() {
 	r.HandleFunc("/allexoplanets", handlers.ListExoPlanet).Methods("GET")
 	r.HandleFunc("/listexoplanets/{id}", handlers.GetExoPlanetByID).Methods("GET")
 	r.HandleFunc("/exoplanets/{id}", handlers.UpdateExoPlanet).Methods("PUT")
+	r.HandleFunc("/exoplanets/{id}", handlers.DeleteExoPlanet).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
